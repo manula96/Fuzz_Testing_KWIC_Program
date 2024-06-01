@@ -14,10 +14,11 @@ public class FuzzTester extends JFrame {
     private JButton startButton;
     private JButton clearButton;
     private JButton generateRandomDataButton;
+    private JButton testWithRandomDataButton;
     private static final String INPUT_FILE = "fuzz_input.txt";
     private static final String RANDOM_DATA_FILE = "random_data.txt";
     private static final String KWIC_PROGRAM = "java -cp . KWIC";
-    private static final int NUM_TEST_CASES = 8;
+    private static final int NUM_TEST_CASES = 9;
 
     public FuzzTester() {
         setTitle("Fuzz Testing Tool");
@@ -44,7 +45,8 @@ public class FuzzTester extends JFrame {
                 "6. Numbers and special characters<br/>" +
                 "7. Letters and special characters<br/>" +
                 "8. Letters, numbers, and special characters<br/>" +
-                "9. Custom input<br/></html>");
+                "9. Custom input<br/>" +
+                "10. Use Random Data File<br/></html>");
         instructionsLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
         JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -53,12 +55,14 @@ public class FuzzTester extends JFrame {
         startButton = new JButton("Start Testing");
         clearButton = new JButton("Clear");
         generateRandomDataButton = new JButton("Generate Random Data");
+        testWithRandomDataButton = new JButton("Test with Random Data");
 
         inputPanel.add(numTestsLabel);
         inputPanel.add(numTestsField);
         inputPanel.add(startButton);
         inputPanel.add(clearButton);
         inputPanel.add(generateRandomDataButton);
+        inputPanel.add(testWithRandomDataButton);
 
         customInputArea = new JTextArea(5, 40);
         customInputArea.setBorder(BorderFactory.createTitledBorder("Custom Input (for test case 9)"));
@@ -103,6 +107,13 @@ public class FuzzTester extends JFrame {
                 generateRandomData();
             }
         });
+
+        testWithRandomDataButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                performFuzzTestingWithRandomData();
+            }
+        });
     }
 
     private void startFuzzTesting() {
@@ -145,7 +156,7 @@ public class FuzzTester extends JFrame {
                 // Split the command properly for ProcessBuilder
                 String[] command = KWIC_PROGRAM.split(" ");
                 List<String> commandList = new ArrayList<>(Arrays.asList(command));
-                commandList.add(INPUT_FILE);
+                commandList.add(RANDOM_DATA_FILE);
 
                 ProcessBuilder builder = new ProcessBuilder(commandList);
                 builder.redirectErrorStream(true);
@@ -187,7 +198,7 @@ public class FuzzTester extends JFrame {
     private void generateRandomData() {
         Random random = new Random();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(RANDOM_DATA_FILE))) {
-            for (int i = 0; i < 1000; i++) { // Adjust the number of titles as needed
+            for (int i = 0; i < 50; i++) {
                 int titleLength = random.nextInt(50) + 1;
                 StringBuilder title = new StringBuilder();
                 for (int j = 0; j < titleLength; j++) {
@@ -201,6 +212,50 @@ public class FuzzTester extends JFrame {
             e.printStackTrace();
         }
         JOptionPane.showMessageDialog(this, "Random data generated and saved to file: " + RANDOM_DATA_FILE, "Random Data Generated", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void performFuzzTestingWithRandomData() {
+        List<String> titles = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(RANDOM_DATA_FILE))) {
+            String randomDataLine;
+            while ((randomDataLine = reader.readLine()) != null) {
+                titles.add(randomDataLine);
+            }
+            writeInputFile(titles);
+
+            // Split the command properly for ProcessBuilder
+            String[] command = KWIC_PROGRAM.split(" ");
+            List<String> commandList = new ArrayList<>(Arrays.asList(command));
+            commandList.add(INPUT_FILE);
+
+            ProcessBuilder builder = new ProcessBuilder(commandList);
+            builder.redirectErrorStream(true);
+            Process process = builder.start();
+
+            boolean finished = process.waitFor(5, TimeUnit.SECONDS);
+            if (!finished) {
+                process.destroyForcibly();
+                return;
+            }
+
+            BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder output = new StringBuilder();
+            String outputLine;
+            while ((outputLine = outputReader.readLine()) != null) {
+                output.append(outputLine).append("\n");
+            }
+
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                updateResultArea("----------------------------\n" +
+                        "Crash found when testing with random data file:\n" +
+                        "----------------------------\n" + output.toString());
+            } else {
+                updateResultArea("Testing with random data file passed successfully.\n");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 
