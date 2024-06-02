@@ -1,0 +1,2 @@
+processClover (  {"children":[""],"name":"Clover database Mon Jun 3 2024 00:07:10 AEST","stats":{"AvgMethodComplexity":4.3333335,"Complexity":13,"ErroneousTests":0,"FailingTests":0,"FilteredElements":0,"PassingTests":0,"PcErroneousTests":-1,"PcFailingTests":-1,"PcPassingTests":-1,"TestExecutionTime":0,"Tests":0,"TotalChildren":1,"TotalPercentageCovered":36.363636,"TotalStatements":11,"UncoveredElements":14},"title":"triangleProgram 1.0-SNAPSHOT"}
+ ); 

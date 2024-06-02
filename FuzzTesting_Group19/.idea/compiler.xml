@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="FuzzTesting_Group19" />
+        <module name="triangleProgram" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="FuzzTesting_Group19" target="20" />
+    </bytecodeTargetLevel>
   </component>
 </project>

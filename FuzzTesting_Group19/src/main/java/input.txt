@@ -1,4 +1,0 @@
-Pattern-Oriented Software Architecture
-Software Architecture
-Introducing Design Patterns
-Manula Ransika Udugahapattuwa
