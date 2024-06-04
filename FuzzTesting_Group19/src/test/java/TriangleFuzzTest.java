@@ -3,7 +3,7 @@ import java.util.Random;
 public class TriangleFuzzTest {
 
     public static void main(String[] args) {
-        int maxIterations = 10;
+        int maxIterations = 10000;
         Random rand = new Random();
         int upperBound = 10;
         int[] outputs = new int[5]; // To track each unique output
@@ -29,7 +29,6 @@ public class TriangleFuzzTest {
             } else if (result.equals("")) {
                 outputs[4]++; // Capture any errors or undefined results
             }
-
             // Check if all possible outputs have been found
             if (outputs[0] > 0 && outputs[1] > 0 && outputs[2] > 0 && outputs[3] > 0) {
                 break;
@@ -39,7 +38,7 @@ public class TriangleFuzzTest {
         long duration = endTime - startTime;
 
         // Print the results
-        System.out.println("Fuzz Testing Results:");
+        System.out.println("--------Fuzz Testing Results:---------");
         System.out.println("Non-triangle: " + outputs[0]);
         System.out.println("Equilateral triangle: " + outputs[1]);
         System.out.println("Isosceles triangle: " + outputs[2]);

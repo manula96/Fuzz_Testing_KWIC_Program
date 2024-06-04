@@ -9,7 +9,7 @@ var Packages = {
     "text": "default-pkg",
     "package": "default-pkg",
     "url": "default-pkg/pkg-summary.html",
-            "coverage": "13.8%",
+            "coverage": "13.6%",
         "icon": "aui-icon aui-icon-small aui-iconfont-devtools-folder-closed",
             "li_attr": {"data-is-link": "true"},
         "a_attr": {"href": "default-pkg/pkg-summary.html"},

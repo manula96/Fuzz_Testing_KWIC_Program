@@ -210,7 +210,7 @@ public class FuzzTester extends JFrame {
                 int titleLength = random.nextInt(50) + 1;
                 StringBuilder title = new StringBuilder();
                 for (int j = 0; j < titleLength; j++) {
-                    char randomChar = (char) (random.nextInt(95) + 32); // ASCII 32-126
+                    char randomChar = (char) (random.nextInt(95) + 32);
                     title.append(randomChar);
                 }
                 writer.write(title.toString());
@@ -348,7 +348,14 @@ public class FuzzTester extends JFrame {
                         title.append(randomChar);
                     }
                     break;
+                case 9: // Custom input
+                    String[] customTitles = customInputArea.getText().split("\n");
+                    titles.addAll(Arrays.asList(customTitles));
+                    title.append(customTitles);
+                    return titles;
             }
+
+
             titles.add(title.toString());
         }
         return titles;

@@ -11,12 +11,10 @@ public class TriangleProgram {
                 return "triangle";
         } else
             return "non-triangle";
-        return "No output"; //as the c program does not have a print option for this
+        return "No output";
     }
-
     public static void main(String[] args) {
-        // Placeholder for testing the function
-        System.out.println(triangle(3, 6, 6)); // Expected: "isosceles triangle"
+        System.out.println(triangle(3, 6, 6));
     }
 }
 
